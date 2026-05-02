@@ -17,6 +17,19 @@ export type Game = {
 
 export const games: Game[] = [
   {
+    slug: "geopolitics",
+    title: "Geopolitics",
+    description:
+      "Strategy game where you steer a nation through a shifting world map. Trade, alliance, conflict.",
+    status: "live",
+    tech: ["TypeScript", "Next.js"],
+    genre: "Grand strategy",
+    hue: 35,
+    pattern: "grid",
+    link: "https://geopolitics.ashwanijha.dev",
+    date: "2026-05-02",
+  },
+  {
     slug: "friday-co-op-tetris",
     title: "Friday Co-op Tetris",
     description:
