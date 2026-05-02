@@ -35,14 +35,14 @@ export default function GamesList({ games }: { games: Game[] }) {
         <label htmlFor="games-search" className="sr-only">
           Search games
         </label>
-        <div className="relative max-w-[640px]">
+        <div className="relative max-w-[560px]">
           <input
             id="games-search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by title, genre, tech…"
-            className="w-full text-[0.95rem] py-3 pl-11 pr-12 rounded-md outline-none transition-colors font-mono"
+            className="w-full text-[0.92rem] py-2.5 pl-10 pr-12 rounded-md outline-none transition-colors font-mono"
             style={{
               background: "var(--color-bg-card)",
               border: "1px solid var(--color-border-bright)",
@@ -59,7 +59,7 @@ export default function GamesList({ games }: { games: Game[] }) {
           />
           <span
             aria-hidden
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[1rem]"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[0.95rem]"
             style={{ color: "var(--color-text-mute)" }}
           >
             ⌕
@@ -69,7 +69,7 @@ export default function GamesList({ games }: { games: Game[] }) {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded px-2 py-1 text-[0.7rem] font-mono uppercase tracking-wider"
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded px-1.5 py-0.5 text-[0.66rem] font-mono uppercase tracking-wider"
               style={{
                 background: "transparent",
                 border: 0,
@@ -80,12 +80,6 @@ export default function GamesList({ games }: { games: Game[] }) {
             </button>
           )}
         </div>
-        <p
-          className="text-[0.74rem] font-mono uppercase tracking-[0.16em] mt-3"
-          style={{ color: "var(--color-text-mute)" }}
-        >
-          {filtered.length} of {games.length} games
-        </p>
       </div>
 
       {/* Grid */}
@@ -128,107 +122,69 @@ function Card({ game, idx }: { game: Game; idx: number }) {
     >
       <CoverArt game={game} />
 
-      <div className="p-5 md:p-6 flex flex-col flex-1">
-        {/* Title row */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <h3
-            className="text-[1rem] md:text-[1.05rem] font-semibold leading-snug"
-            style={{
-              color: "var(--color-text)",
-              letterSpacing: "-0.012em",
-            }}
-          >
-            {game.title}
-          </h3>
-          <span className={status.class}>
-            {game.status === "live" && (
-              <span
-                aria-hidden
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: 999,
-                  background: "currentColor",
-                  display: "inline-block",
-                  animation: "status-pulse 2.4s ease-in-out infinite",
-                }}
-              />
-            )}
-            {status.label}
-          </span>
-        </div>
-
-        {/* Description */}
+      <div className="p-5 flex flex-col gap-4 flex-1">
+        {/* One-line description */}
         <p
-          className="text-[0.86rem] leading-relaxed mb-5 flex-1"
+          className="text-[0.88rem] leading-relaxed flex-1"
           style={{ color: "var(--color-text-body)" }}
         >
           {game.description}
         </p>
 
-        {/* Tech tags */}
-        <div className="flex flex-wrap gap-1.5 mb-5">
-          {game.tech.map((t) => (
-            <span
-              key={t}
-              className="text-[0.66rem] font-mono uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
-              style={{
-                background: "var(--color-bg-soft)",
-                border: "1px solid var(--color-border)",
-                color: "var(--color-text-dim)",
-              }}
-            >
-              {t}
+        {/* Action row: status + tech + play */}
+        <div className="flex items-center justify-between gap-3 pt-3" style={{ borderTop: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 min-w-0">
+            <span className={status.class}>
+              {game.status === "live" && (
+                <span
+                  aria-hidden
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: 999,
+                    background: "currentColor",
+                    display: "inline-block",
+                    animation: "status-pulse 2.4s ease-in-out infinite",
+                  }}
+                />
+              )}
+              {status.label}
             </span>
-          ))}
-        </div>
-
-        {/* Action row */}
-        <div
-          className="flex items-center justify-between gap-3 pt-4"
-          style={{ borderTop: "1px solid var(--color-border)" }}
-        >
-          {game.repo ? (
-            <a
-              href={game.repo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[0.74rem] font-mono uppercase tracking-[0.12em] transition-colors"
+            <span
+              className="text-[0.7rem] font-mono truncate"
               style={{ color: "var(--color-text-dim)" }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = "var(--color-text)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "var(--color-text-dim)")
-              }
             >
-              ↗ Source
-            </a>
-          ) : (
-            <span
-              className="text-[0.7rem] font-mono uppercase tracking-[0.12em]"
-              style={{ color: "var(--color-text-mute)" }}
-            >
-              No source
+              {game.tech.join(" · ")}
             </span>
-          )}
+          </div>
           {playable ? (
             <a
               href={game.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-play"
-              style={{ padding: "0.5rem 1rem", fontSize: "0.78rem" }}
+              className="btn btn-play flex-shrink-0"
+              style={{ padding: "0.4rem 0.85rem", fontSize: "0.72rem" }}
             >
               ▶ Play
             </a>
           ) : (
-            <span
-              className="text-[0.7rem] font-mono uppercase tracking-[0.12em]"
-              style={{ color: "var(--color-text-mute)" }}
-            >
-              not playable yet
-            </span>
+            game.repo && (
+              <a
+                href={game.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[0.7rem] font-mono uppercase tracking-[0.12em] flex-shrink-0 transition-colors"
+                style={{ color: "var(--color-text-dim)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--color-text)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--color-text-dim)")
+                }
+              >
+                ↗ Source
+              </a>
+            )
           )}
         </div>
       </div>
