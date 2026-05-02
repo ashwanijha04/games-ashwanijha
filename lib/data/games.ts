@@ -17,6 +17,19 @@ export type Game = {
 
 export const games: Game[] = [
   {
+    slug: "casino",
+    title: "Casino",
+    description:
+      "Blackjack, Texas Hold'em poker, and Russian Roulette — three tables, one chip balance.",
+    status: "live",
+    tech: ["Next.js", "TypeScript", "Framer Motion"],
+    genre: "Casino",
+    hue: 145,
+    pattern: "dots",
+    link: "https://casino.ashwanijha.dev",
+    date: "2026-05-02",
+  },
+  {
     slug: "geopolitics",
     title: "Geopolitics",
     description:
