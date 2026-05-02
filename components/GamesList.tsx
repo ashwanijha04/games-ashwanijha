@@ -3,29 +3,12 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import type { Game } from "@/lib/data/games";
+import CoverArt from "./CoverArt";
 
-const statusStyle: Record<
-  Game["status"],
-  { label: string; color: string; bg: string; pulse: boolean }
-> = {
-  live: {
-    label: "Live",
-    color: "#86efac",
-    bg: "rgba(34, 197, 94, 0.12)",
-    pulse: true,
-  },
-  wip: {
-    label: "WIP",
-    color: "#fbbf24",
-    bg: "rgba(251, 191, 36, 0.12)",
-    pulse: false,
-  },
-  concept: {
-    label: "Concept",
-    color: "var(--color-accent-hover)",
-    bg: "var(--color-accent-soft)",
-    pulse: false,
-  },
+const statusClass: Record<Game["status"], { class: string; label: string }> = {
+  live: { class: "pill pill-live", label: "Live" },
+  wip: { class: "pill pill-wip", label: "WIP" },
+  concept: { class: "pill pill-concept", label: "Concept" },
 };
 
 export default function GamesList({ games }: { games: Game[] }) {
@@ -39,40 +22,44 @@ export default function GamesList({ games }: { games: Game[] }) {
         g.title.toLowerCase().includes(q) ||
         g.description.toLowerCase().includes(q) ||
         g.tech.some((t) => t.toLowerCase().includes(q)) ||
-        g.status.toLowerCase().includes(q)
+        g.status.toLowerCase().includes(q) ||
+        g.genre.toLowerCase().includes(q)
       );
     });
   }, [games, query]);
 
   return (
     <div>
-      <div className="mb-10 md:mb-14">
+      {/* Search */}
+      <div className="mb-12 md:mb-14">
         <label htmlFor="games-search" className="sr-only">
           Search games
         </label>
-        <div className="relative">
+        <div className="relative max-w-[640px]">
           <input
             id="games-search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by title, tech, or status…"
-            className="w-full text-[1rem] md:text-[1.05rem] py-3.5 pl-11 pr-12 rounded-lg outline-none transition-colors"
+            placeholder="Search by title, genre, tech…"
+            className="w-full text-[0.95rem] py-3 pl-11 pr-12 rounded-md outline-none transition-colors font-mono"
             style={{
               background: "var(--color-bg-card)",
-              border: "1px solid var(--color-border)",
+              border: "1px solid var(--color-border-bright)",
               color: "var(--color-text)",
+              letterSpacing: "0.01em",
             }}
             onFocus={(e) =>
-              (e.currentTarget.style.borderColor = "var(--color-accent)")
+              (e.currentTarget.style.borderColor = "var(--color-neon-cyan)")
             }
             onBlur={(e) =>
-              (e.currentTarget.style.borderColor = "var(--color-border)")
+              (e.currentTarget.style.borderColor =
+                "var(--color-border-bright)")
             }
           />
           <span
             aria-hidden
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[1.05rem]"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-[1rem]"
             style={{ color: "var(--color-text-mute)" }}
           >
             ⌕
@@ -82,7 +69,7 @@ export default function GamesList({ games }: { games: Game[] }) {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md px-2 py-1 text-[0.85rem] font-mono"
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded px-2 py-1 text-[0.7rem] font-mono uppercase tracking-wider"
               style={{
                 background: "transparent",
                 border: 0,
@@ -94,13 +81,14 @@ export default function GamesList({ games }: { games: Game[] }) {
           )}
         </div>
         <p
-          className="text-[0.78rem] font-mono mt-3"
+          className="text-[0.74rem] font-mono uppercase tracking-[0.16em] mt-3"
           style={{ color: "var(--color-text-mute)" }}
         >
-          {filtered.length} of {games.length}
+          {filtered.length} of {games.length} games
         </p>
       </div>
 
+      {/* Grid */}
       {filtered.length === 0 ? (
         <p
           className="text-[0.95rem]"
@@ -110,12 +98,9 @@ export default function GamesList({ games }: { games: Game[] }) {
           <span style={{ color: "var(--color-text)" }}>“{query}”</span>.
         </p>
       ) : (
-        <div
-          className="flex flex-col"
-          style={{ borderTop: "1px solid var(--color-border)" }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {filtered.map((game, idx) => (
-            <Row key={game.slug} game={game} idx={idx} />
+            <Card key={game.slug} game={game} idx={idx} />
           ))}
         </div>
       )}
@@ -123,102 +108,130 @@ export default function GamesList({ games }: { games: Game[] }) {
   );
 }
 
-function Row({ game, idx }: { game: Game; idx: number }) {
-  const s = statusStyle[game.status];
+function Card({ game, idx }: { game: Game; idx: number }) {
+  const status = statusClass[game.status];
   const playable = !!game.link;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
+    <motion.article
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        delay: idx * 0.04,
+        duration: 0.45,
+        delay: idx * 0.05,
         ease: [0.4, 0, 0.2, 1],
       }}
-      className="py-7 md:py-8"
-      style={{ borderBottom: "1px solid var(--color-border)" }}
+      whileHover={{
+        boxShadow: `0 16px 40px -16px hsla(${game.hue}, 80%, 50%, 0.45), 0 0 0 1px hsla(${game.hue}, 70%, 55%, 0.35)`,
+      }}
+      className="game-card flex flex-col"
     >
-      <div className="grid md:grid-cols-[1fr_auto] gap-4 md:gap-8 items-start">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-            <h3
-              className="text-[1.1rem] md:text-[1.2rem] font-semibold leading-snug"
-              style={{
-                color: "var(--color-text)",
-                letterSpacing: "-0.012em",
-              }}
-            >
-              {game.title}
-            </h3>
-            <span
-              className="pill"
-              style={{ background: s.bg, color: s.color }}
-            >
-              {s.pulse && (
-                <span
-                  aria-hidden
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: 999,
-                    background: s.color,
-                    display: "inline-block",
-                    animation: "status-pulse 2.4s ease-in-out infinite",
-                  }}
-                />
-              )}
-              {s.label}
-            </span>
-          </div>
-          <p
-            className="text-[0.95rem] leading-relaxed mb-4"
+      <CoverArt game={game} />
+
+      <div className="p-5 md:p-6 flex flex-col flex-1">
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <h3
+            className="text-[1rem] md:text-[1.05rem] font-semibold leading-snug"
             style={{
-              color: "var(--color-text-body)",
-              maxWidth: "640px",
+              color: "var(--color-text)",
+              letterSpacing: "-0.012em",
             }}
           >
-            {game.description}
-          </p>
-          <p
-            className="text-[0.76rem] font-mono"
-            style={{ color: "var(--color-text-dim)" }}
-          >
-            {game.tech.join(" · ")}
-          </p>
+            {game.title}
+          </h3>
+          <span className={status.class}>
+            {game.status === "live" && (
+              <span
+                aria-hidden
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 999,
+                  background: "currentColor",
+                  display: "inline-block",
+                  animation: "status-pulse 2.4s ease-in-out infinite",
+                }}
+              />
+            )}
+            {status.label}
+          </span>
         </div>
 
-        <div className="flex items-center gap-4 flex-shrink-0">
-          {game.repo && (
+        {/* Description */}
+        <p
+          className="text-[0.86rem] leading-relaxed mb-5 flex-1"
+          style={{ color: "var(--color-text-body)" }}
+        >
+          {game.description}
+        </p>
+
+        {/* Tech tags */}
+        <div className="flex flex-wrap gap-1.5 mb-5">
+          {game.tech.map((t) => (
+            <span
+              key={t}
+              className="text-[0.66rem] font-mono uppercase tracking-[0.1em] px-1.5 py-0.5 rounded"
+              style={{
+                background: "var(--color-bg-soft)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text-dim)",
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {/* Action row */}
+        <div
+          className="flex items-center justify-between gap-3 pt-4"
+          style={{ borderTop: "1px solid var(--color-border)" }}
+        >
+          {game.repo ? (
             <a
               href={game.repo}
               target="_blank"
               rel="noopener noreferrer"
-              className="link text-[0.88rem]"
+              className="text-[0.74rem] font-mono uppercase tracking-[0.12em] transition-colors"
+              style={{ color: "var(--color-text-dim)" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "var(--color-text)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--color-text-dim)")
+              }
             >
-              Source →
+              ↗ Source
             </a>
+          ) : (
+            <span
+              className="text-[0.7rem] font-mono uppercase tracking-[0.12em]"
+              style={{ color: "var(--color-text-mute)" }}
+            >
+              No source
+            </span>
           )}
           {playable ? (
             <a
               href={game.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-solid"
-              style={{ padding: "0.55rem 1.1rem", fontSize: "0.88rem" }}
+              className="btn btn-play"
+              style={{ padding: "0.5rem 1rem", fontSize: "0.78rem" }}
             >
-              Play
+              ▶ Play
             </a>
           ) : (
             <span
-              className="text-[0.78rem] font-mono"
+              className="text-[0.7rem] font-mono uppercase tracking-[0.12em]"
               style={{ color: "var(--color-text-mute)" }}
             >
-              not yet
+              not playable yet
             </span>
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

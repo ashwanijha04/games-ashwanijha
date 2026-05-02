@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0a0b;
-  --color-bg-soft: #131316;
-  --color-bg-card: #16161a;
-  --color-bg-elevated: #1c1c22;
-  --color-border: #1f1f25;
-  --color-border-bright: #2d2d36;
+  /* Gaming aesthetic — deeper black, neon accents, more dramatic */
+  --color-bg: #06060a;
+  --color-bg-soft: #0d0d14;
+  --color-bg-card: #101019;
+  --color-bg-elevated: #15151f;
+  --color-border: #1d1d2a;
+  --color-border-bright: #2a2a3d;
 
   --color-text: #f5f5f7;
-  --color-text-body: #b4b4bb;
-  --color-text-dim: #82828b;
-  --color-text-mute: #5a5a63;
+  --color-text-body: #a8a8b8;
+  --color-text-dim: #6e6e80;
+  --color-text-mute: #4a4a5a;
 
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-accent-soft: rgba(59, 130, 246, 0.14);
-  --color-accent-glow: rgba(59, 130, 246, 0.3);
+  --color-accent: #5b8def;
+  --color-accent-hover: #82a8ff;
+
+  --color-neon-cyan: #00d9ff;
+  --color-neon-magenta: #ff3fa8;
+  --color-neon-lime: #b5ff3a;
+  --color-neon-amber: #ffb73a;
 
   --color-success: #22c55e;
   --color-warning: #f59e0b;
@@ -42,93 +46,82 @@ body {
   color: var(--color-text-body);
   font-family: var(--font-sans);
   font-weight: 400;
-  line-height: 1.7;
+  line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
 }
 
+/* Atmospheric backdrop — subtle scanlines + multi-color glow at top */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.025) 1px,
-    transparent 1px
-  );
-  background-size: 32px 32px;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 255, 255, 0.012) 2px,
+      rgba(255, 255, 255, 0.012) 3px
+    );
   pointer-events: none;
-  mask-image: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    black 0%,
-    transparent 90%
-  );
 }
 
 body::after {
   content: "";
   position: fixed;
-  top: -240px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 600px;
+  inset: 0;
   z-index: -1;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(59, 130, 246, 0.08) 0%,
-    transparent 70%
-  );
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(255, 63, 168, 0.07), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 0%, rgba(0, 217, 255, 0.07), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(91, 141, 239, 0.05), transparent 60%);
   pointer-events: none;
 }
 
 ::selection {
-  background: var(--color-accent-soft);
+  background: rgba(0, 217, 255, 0.25);
   color: var(--color-text);
 }
 
+/* Display heading — gaming caps */
 .display {
   font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.07;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.96;
   color: var(--color-text);
+}
+
+.display-mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 .section {
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 5rem 1.5rem;
+  padding: 4rem 1.5rem;
 }
 @media (min-width: 768px) {
-  .section { padding: 7rem 2rem; }
-}
-@media (min-width: 1024px) {
-  .section { padding: 8rem 2rem; }
+  .section { padding: 6rem 2rem; }
 }
 
-.section h2.section-title {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: -0.024em;
-  font-size: clamp(1.75rem, 3vw, 2.4rem);
-  margin-bottom: 1.5rem;
-  line-height: 1.15;
-  color: var(--color-text);
-}
-
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.92rem;
-  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
   font-family: var(--font-sans);
   text-decoration: none;
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
@@ -137,50 +130,189 @@ body::after {
   background: var(--color-bg-card);
   color: var(--color-text);
   white-space: nowrap;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .btn:hover {
   border-color: var(--color-text-dim);
   background: var(--color-bg-elevated);
 }
-.btn-solid {
-  background: var(--color-accent);
-  color: #ffffff;
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 16px -4px var(--color-accent-glow);
+.btn-play {
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+  font-weight: 700;
 }
-.btn-solid:hover {
-  background: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
-  color: #ffffff;
+.btn-play:hover {
+  background: var(--color-neon-cyan);
+  border-color: var(--color-neon-cyan);
+  color: var(--color-bg);
+  box-shadow: 0 0 24px rgba(0, 217, 255, 0.4);
 }
 
+/* Inline link */
 .link {
-  color: var(--color-accent-hover);
+  color: var(--color-text);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.15s ease;
+  border-bottom: 1px solid var(--color-border-bright);
 }
 .link:hover {
-  color: var(--color-text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--color-neon-cyan);
+  border-bottom-color: var(--color-neon-cyan);
 }
 
+/* Status pills */
 .pill {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.22rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 600;
   font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+.pill-live {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+}
+.pill-wip {
+  background: rgba(255, 183, 58, 0.12);
+  border: 1px solid rgba(255, 183, 58, 0.4);
+  color: var(--color-neon-amber);
+}
+.pill-concept {
+  background: rgba(91, 141, 239, 0.12);
+  border: 1px solid rgba(91, 141, 239, 0.4);
+  color: var(--color-accent-hover);
 }
 
 @keyframes status-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+}
+
+/* Game card — the centerpiece of this site */
+.game-card {
+  position: relative;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-bright);
+}
+
+/* Cover art container — top portion of the card */
+.cover-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.cover-art-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Pattern: tetromino — 4-block shapes scattered */
+.pattern-tetromino {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 23px,
+      rgba(255, 255, 255, 0.06) 23px,
+      rgba(255, 255, 255, 0.06) 24px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 23px,
+      rgba(255, 255, 255, 0.06) 23px,
+      rgba(255, 255, 255, 0.06) 24px
+    );
+}
+
+/* Pattern: grid — dungeon */
+.pattern-grid {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 31px,
+      rgba(255, 255, 255, 0.05) 31px,
+      rgba(255, 255, 255, 0.05) 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 31px,
+      rgba(255, 255, 255, 0.05) 31px,
+      rgba(255, 255, 255, 0.05) 32px
+    );
+}
+
+/* Pattern: scanlines — terminal */
+.pattern-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 255, 255, 0.06) 2px,
+    rgba(255, 255, 255, 0.06) 3px
+  );
+}
+
+/* Pattern: arena — concentric circles */
+.pattern-arena {
+  background-image: radial-gradient(
+    circle at center,
+    transparent 0,
+    transparent 38%,
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(255, 255, 255, 0.08) 39%,
+    transparent 39%,
+    transparent 60%,
+    rgba(255, 255, 255, 0.08) 60%,
+    rgba(255, 255, 255, 0.08) 61%,
+    transparent 61%,
+    transparent 80%,
+    rgba(255, 255, 255, 0.08) 80%,
+    rgba(255, 255, 255, 0.08) 81%
+  );
+}
+
+/* Pattern: dots */
+.pattern-dots {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 16px 16px;
+}
+
+/* Vignette over cover — readability */
+.cover-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  pointer-events: none;
 }
